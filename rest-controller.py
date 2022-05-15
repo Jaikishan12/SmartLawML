@@ -7,6 +7,7 @@ import json
 from flask import Flask, request
 import pandas as pd
 import py_eureka_client.eureka_client as eureka_client
+import pickle
 from pip._vendor.rich.jupyter import display
 
 rest_port = 8050
@@ -25,12 +26,20 @@ def hello_world():
 def hello():
     data = request.json
     
-    o1 = data["input1"] + "o1"
-    o2 = data["input2"] + "o2"
+    argumentTexts=data["argumentTexts"]
+        
+    loaded_model_vect = pickle.load(open("E:/git/SmartLawML/work-area/model_vect_argby.pkl", 'rb'))    
+    loaded_model_argby = pickle.load(open("E:/git/SmartLawML/work-area/model_svm_argby.pkl", 'rb'))
     
+    argBy=[]
+    
+    for argText in argumentTexts:    
+        X_vec=loaded_model_vect.transform([argText])
+        temp = loaded_model_argby.predict(X_vec.toarray())[0]
+        argBy.append(temp)
+        
     x = {
-      "output1": o1,
-      "output2": o2
+      "argumentBy":argBy
     }
     
     # convert into JSON:

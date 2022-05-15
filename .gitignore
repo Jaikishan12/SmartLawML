@@ -1,3 +1,6 @@
 /smartlawml-microservice/
 .pydevproject
 .project
+*.pkl
+*.pickle
+*checkpoint.ipynb
