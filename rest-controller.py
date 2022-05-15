@@ -23,13 +23,13 @@ def hello_world():
 
 
 @app.route("/predictArgumentBy", methods=['POST'])
-def hello():
+def predictArgumentBy():
     data = request.json
     
     argumentTexts=data["argumentTexts"]
         
-    loaded_model_vect = pickle.load(open("E:/git/SmartLawML/work-area/model_vect_argby.pkl", 'rb'))    
-    loaded_model_argby = pickle.load(open("E:/git/SmartLawML/work-area/model_svm_argby.pkl", 'rb'))
+    loaded_model_vect = pickle.load(open("E:/git/SmartLawML/models/model_vect_argby.pkl", 'rb'))    
+    loaded_model_argby = pickle.load(open("E:/git/SmartLawML/models/best_model_argby.pkl", 'rb'))
     
     argBy=[]
     
@@ -46,6 +46,57 @@ def hello():
     response = json.dumps(x)
     
     return response
+
+@app.route("/predictSentenceType", methods=['POST'])
+def predictSentenceType():
+    data = request.json
+    
+    sentenceTypeTexts=data["sentenceTypeTexts"]
+        
+    loaded_model_vect = pickle.load(open("E:/git/SmartLawML/models/model_vect_senttype.pkl", 'rb'))    
+    loaded_model_senttype = pickle.load(open("E:/git/SmartLawML/models/best_model_senttype.pkl", 'rb'))
+    
+    sentType=[]
+    
+    for sentenceTypeText in sentenceTypeTexts:    
+        X_vec=loaded_model_vect.transform([sentenceTypeText])
+        temp = loaded_model_senttype.predict(X_vec.toarray())[0]
+        sentType.append(temp)
+        
+    x = {
+      "sentenceType":sentType
+    }
+    
+    # convert into JSON:
+    response = json.dumps(x)
+    
+    return response
+
+@app.route("/predictOrderType", methods=['POST'])
+def predictOrderType():
+    data = request.json
+    
+    orderTypeTexts=data["orderTypeTexts"]
+        
+    loaded_model_vect = pickle.load(open("E:/git/SmartLawML/models/model_vect_ordertype.pkl", 'rb'))    
+    loaded_model_ordertype = pickle.load(open("E:/git/SmartLawML/models/best_model_ordertype.pkl", 'rb'))
+    
+    oType=[]
+    
+    for orderTypeText in orderTypeTexts:    
+        X_vec=loaded_model_vect.transform([orderTypeText])
+        temp = loaded_model_ordertype.predict(X_vec.toarray())[0]
+        oType.append(temp)
+        
+    x = {
+      "orderType":oType
+    }
+    
+    # convert into JSON:
+    response = json.dumps(x)
+    
+    return response
+
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port = rest_port)

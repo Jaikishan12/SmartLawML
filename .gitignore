@@ -4,3 +4,4 @@
 *.pkl
 *.pickle
 *checkpoint.ipynb
+*.pyc
