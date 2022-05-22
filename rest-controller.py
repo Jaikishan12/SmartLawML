@@ -97,6 +97,18 @@ def predictOrderType():
     
     return response
 
+@app.route("/getDatasetStats", methods=['GET'])
+def getDatasetStats():
+    import sys
+    sys.path.append('models')
+    from datasetStats import getDatasetStatistics
+    out = getDatasetStatistics()
+   
+    x = {
+      "datasetStatisticsList":out
+    }
+    response = json.dumps(x)
+    return response
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port = rest_port)
