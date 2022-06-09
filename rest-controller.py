@@ -110,5 +110,26 @@ def getDatasetStats():
     response = json.dumps(x)
     return response
 
+@app.route("/getCVResults", methods=['GET'])
+def getCVResults():
+    import sys
+    sys.path.append('models')
+    from sentencetype import cvResult
+    out = cvResult()
+    x = {
+      "cvResultList":out
+    }
+    
+    json_object = json.dumps(x, indent = 4)
+    import time
+    timestr = time.strftime("%Y%m%d-%H%M%S")  
+    filename="temp/CVResults"+timestr+".json"  
+    # Writing to sample.json
+    with open(filename, "w") as outfile:
+        outfile.write(json_object)
+    
+    response = json.dumps(x)
+    return response
+    
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port = rest_port)

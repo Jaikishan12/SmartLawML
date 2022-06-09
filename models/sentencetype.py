@@ -53,3 +53,29 @@ def predict():
     loaded_model_argby = pickle.load(open("E:/git/SmartLawML/models/best_model_senttype.pkl", 'rb'))
     o1 = loaded_model_argby.predict(X_vec.toarray())[0]
     print(o1)
+    
+def cvResult():
+    from smartlawdata import getSentenceTypeDataSet
+    df_final1 = getSentenceTypeDataSet()
+    #print(df_final1)
+    
+    los=[]
+    for item in df_final1['text']:
+        los.append(item)
+    
+    #Create a TFIDF vectorizer to generate text entered into vector form to be given as input to Machine Learning model
+    vectorizer = TfidfVectorizer()
+    vectors = vectorizer.fit_transform(los)
+    feature_names = vectorizer.get_feature_names_out() #Extract the feature names as columns for the texts
+    dense = vectors.todense()
+    denselist = dense.tolist()
+    df_end = pd.DataFrame(denselist, columns=feature_names)
+    df_end['argumentSentenceType']=df_final1['argumentSentenceType']
+    
+    y=df_end.argumentSentenceType
+    X=df_end[feature_names]
+    
+    from commonmodels import getBestModelCV
+    out = getBestModelCV(X,y)
+    #print(out)
+    return out
