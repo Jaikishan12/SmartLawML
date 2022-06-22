@@ -115,9 +115,15 @@ def getCVResults():
     import sys
     sys.path.append('models')
     from sentencetype import cvResult
-    out = cvResult()
+    sentenceTypeCVResult = cvResult()
+    from argumentby import cvResult
+    argumentbyCVResult = cvResult()
+    from ordertype import cvResult
+    ordertypeCVResult = cvResult()
     x = {
-      "cvResultList":out
+      "sentenceTypeCVResult":sentenceTypeCVResult,
+      "argumentbyCVResult":argumentbyCVResult,
+      "ordertypeCVResult":ordertypeCVResult
     }
     
     json_object = json.dumps(x, indent = 4)
@@ -129,6 +135,48 @@ def getCVResults():
         outfile.write(json_object)
     
     response = json.dumps(x)
+    return response
+
+@app.route("/submitModelMetricsJob", methods=['POST'])
+def submitModelMetricsJob():
+    import sys
+    sys.path.append('models')
+    from sentencetype import modelMetrics
+    sentenceTypeModelMetrics = modelMetrics()
+    from argumentby import modelMetrics
+    argumentbyModelMetrics = modelMetrics()
+    from ordertype import modelMetrics
+    ordertypeModelMetrics = modelMetrics()
+    x = {
+      "sentenceTypeModelMetrics":sentenceTypeModelMetrics,
+      "argumentbyModelMetrics":argumentbyModelMetrics,
+      "ordertypeModelMetrics":ordertypeModelMetrics
+    }
+    
+    json_object = json.dumps(x, indent = 4)
+    import time
+    timestr = time.strftime("%Y%m%d-%H%M%S")  
+    filename="temp/ModelMetrics"+timestr+".json"
+    
+    
+    # Writing to sample.json
+    with open(filename, "w") as outfile:
+        outfile.write(json_object)
+
+    
+    response = json.dumps(x)
+    return response
+
+
+@app.route("/getModelMetrics", methods=['GET'])
+def getModelMetrics():
+    import sys
+    sys.path.append('models')
+        
+    filename="temp/ModelMetrics.json"  
+    with open(filename,encoding="utf8") as f1: 
+        response=json.load(f1)
+        
     return response
     
 if __name__ == "__main__":

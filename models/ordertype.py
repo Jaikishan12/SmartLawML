@@ -53,3 +53,55 @@ def predict():
     loaded_model_argby = pickle.load(open("E:/git/SmartLawML/models/best_model_ordertype.pkl", 'rb'))
     o1 = loaded_model_argby.predict(X_vec.toarray())[0]
     print(o1)
+     
+def cvResult():
+    from smartlawdata import getOrderTypeDataSet
+    df_final1 = getOrderTypeDataSet()
+    #print(df_final1)
+    
+    los=[]
+    for item in df_final1['text']:
+        los.append(item)
+    
+    #Create a TFIDF vectorizer to generate text entered into vector form to be given as input to Machine Learning model
+    vectorizer = TfidfVectorizer()
+    vectors = vectorizer.fit_transform(los)
+    feature_names = vectorizer.get_feature_names_out() #Extract the feature names as columns for the texts
+    dense = vectors.todense()
+    denselist = dense.tolist()
+    df_end = pd.DataFrame(denselist, columns=feature_names)
+    df_end['orderType']=df_final1['orderType']
+    
+    y=df_end.orderType
+    X=df_end[feature_names]
+    print("(X,y) shape",X.shape,y.shape)
+    from commonmodels import getCVResults
+    out = getCVResults(X,y)
+    #print(out)
+    return out
+
+def modelMetrics():
+    from smartlawdata import getOrderTypeDataSet
+    df_final1 = getOrderTypeDataSet()
+    #print(df_final1)
+    
+    los=[]
+    for item in df_final1['text']:
+        los.append(item)
+    
+    #Create a TFIDF vectorizer to generate text entered into vector form to be given as input to Machine Learning model
+    vectorizer = TfidfVectorizer()
+    vectors = vectorizer.fit_transform(los)
+    feature_names = vectorizer.get_feature_names_out() #Extract the feature names as columns for the texts
+    dense = vectors.todense()
+    denselist = dense.tolist()
+    df_end = pd.DataFrame(denselist, columns=feature_names)
+    df_end['orderType']=df_final1['orderType']
+    
+    y=df_end.orderType
+    X=df_end[feature_names]
+    print("(X,y) shape",X.shape,y.shape)
+    from commonmodels import getModelMetricsOrderType
+    out = getModelMetricsOrderType(X,y)
+    #print(out)
+    return out

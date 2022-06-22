@@ -74,8 +74,34 @@ def cvResult():
     
     y=df_end.argumentSentenceType
     X=df_end[feature_names]
+    print("(X,y) shape",X.shape,y.shape)
+    from commonmodels import getCVResults
+    out = getCVResults(X,y)
+    #print(out)
+    return out
+
+def modelMetrics():
+    from smartlawdata import getSentenceTypeDataSet
+    df_final1 = getSentenceTypeDataSet()
+    #print(df_final1)
     
-    from commonmodels import getBestModelCV
-    out = getBestModelCV(X,y)
+    los=[]
+    for item in df_final1['text']:
+        los.append(item)
+    
+    #Create a TFIDF vectorizer to generate text entered into vector form to be given as input to Machine Learning model
+    vectorizer = TfidfVectorizer()
+    vectors = vectorizer.fit_transform(los)
+    feature_names = vectorizer.get_feature_names_out() #Extract the feature names as columns for the texts
+    dense = vectors.todense()
+    denselist = dense.tolist()
+    df_end = pd.DataFrame(denselist, columns=feature_names)
+    df_end['argumentSentenceType']=df_final1['argumentSentenceType']
+    
+    y=df_end.argumentSentenceType
+    X=df_end[feature_names]
+    print("(X,y) shape",X.shape,y.shape)
+    from commonmodels import getModelMetrics
+    out = getModelMetrics(X,y)
     #print(out)
     return out
