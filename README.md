@@ -1,5 +1,7 @@
 # SmartLawML
 
+In this project we compared 4 to 5 machine learning and deep learning models to be able to solve two related problem statements based on text - classification and receive a high accuracy percentage for the same. We performed required pre-processing on the models, split the dataset into train-test and trained the models. Various accuracy measures are calculated and are tabulated further in the report. The overall analysis gave accuracy of over 99% for prediction of argument by using Deep Learning model (BI-LSTM). For prediction of the class order type, higher accuracies of over 90% were obtained from basic Machine Learning models like SVM (Support Vector Machine).
+
 #### Preparing the local python virtual environment and activating it
 Run the following commands - Windows
 - cd E:\git\SmartLawML 
